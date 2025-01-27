@@ -134,11 +134,11 @@ export function TokenDeployForm() {
       provider,
     });
 
-    // await window.oyl.signPsbt({
-    //   psbt: psbtHex,
-    //   finalize: true,
-    //   broadcast: true,
-    // });
+    await window.oyl.signPsbt({
+      psbt: psbtHex,
+      finalize: true,
+      broadcast: true,
+    });
 
     setIsLoading(false);
 
