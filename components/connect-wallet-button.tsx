@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 
@@ -17,12 +19,9 @@ export function ConnectWalletButton() {
   const checkConnection = async () => {
     if (typeof window.oyl !== "undefined") {
       try {
-        const isConnected = await window.oyl.isConnected();
-        if (isConnected) {
-          const addresses = await window.oyl.getAddresses();
-          setIsConnected(isConnected);
-          setWalletAddress(addresses.taproot.address);
-        }
+        const addresses = await window.oyl.getAddresses();
+        setIsConnected(true);
+        setWalletAddress(addresses.taproot.address);
       } catch (error) {
         console.error("Error checking connection:", error);
       }
