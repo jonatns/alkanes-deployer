@@ -43,7 +43,7 @@ export function ConnectWalletButton() {
   };
 
   return (
-    <Button onClick={connectWallet}>
+    <Button variant="secondary" onClick={connectWallet}>
       {isConnected ? truncateString(walletAddress) : "Connect Wallet"}
     </Button>
   );

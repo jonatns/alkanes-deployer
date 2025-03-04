@@ -29,6 +29,8 @@ declare global {
   interface Window {
     oyl: {
       isConnected(): Promise<boolean>;
+      getNetwork(): Promise<string>;
+      switchNetwork(network: string): Promise<void>;
       getAddresses(): Promise<OylAddresses>;
       signPsbt(params: {
         psbt: string;

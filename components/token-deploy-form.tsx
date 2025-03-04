@@ -30,6 +30,7 @@ export function TokenDeployForm() {
   const [file, setFile] = useState<File | null>(null);
   const [contentType, setContentType] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -123,26 +124,34 @@ export function TokenDeployForm() {
         provider,
       });
 
-    const { psbtHex } = await alkanes.createExecutePsbt({
-      calldata,
-      gatheredUtxos: {
-        utxos: accountSpendableTotalUtxos,
-        totalAmount: accountSpendableTotalBalance,
-      },
-      feeRate: formData.feeRate,
-      account,
-      provider,
-    });
+    try {
+      const { psbtHex } = await alkanes.createExecutePsbt({
+        calldata,
+        gatheredUtxos: {
+          utxos: accountSpendableTotalUtxos,
+          totalAmount: accountSpendableTotalBalance,
+        },
+        feeRate: formData.feeRate,
+        account,
+        provider,
+      });
 
-    await window.oyl.signPsbt({
-      psbt: psbtHex,
-      finalize: true,
-      broadcast: true,
-    });
+      await window.oyl.signPsbt({
+        psbt: psbtHex,
+        finalize: true,
+        broadcast: true,
+      });
+
+      toast.success("Transaction broadcasted!");
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("Error deploying token");
+      }
+    }
 
     setIsLoading(false);
-
-    toast.success("Transaction broadcasted!");
   };
 
   return (
@@ -290,6 +299,7 @@ export function TokenDeployForm() {
                 "Deploy Token"
               )}
             </Button>
+            <p className="text-red-600 mt-2">{error}</p>
           </div>
         </form>
       </Card>
