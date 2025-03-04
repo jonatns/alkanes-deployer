@@ -9,9 +9,9 @@ import { Upload, Loader2 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import pako from "pako";
 import { useDropzone } from "react-dropzone";
-import { getProvider } from "@/lib/provider";
 
-import { Account, alkanes, networks, utxo } from "@oyl/sdk";
+import { alkanes, utxo } from "@oyl/sdk";
+import { addressesToAccount, getOyl, getProvider } from "@/lib/oyl";
 
 const RESERVED_NUMBER = 1;
 
@@ -46,9 +46,16 @@ export function TokenDeployForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const oyl = getOyl();
+
+    if (!oyl) {
+      alert("Oyl wallet is not available.");
+      return;
+    }
+
     setIsLoading(true);
 
-    const addresses = await window.oyl?.getAddresses();
+    const addresses = await oyl.getAddresses();
 
     const calldata = [
       BigInt(6),
@@ -83,39 +90,8 @@ export function TokenDeployForm() {
       };
     }
 
+    const account = addressesToAccount(addresses);
     const provider = getProvider();
-
-    const { taproot, nativeSegwit, nestedSegwit, legacy } = addresses;
-
-    const account: Account = {
-      taproot: {
-        address: taproot.address,
-        pubkey: taproot.publicKey,
-        pubKeyXOnly: "",
-        hdPath: "",
-      },
-      nativeSegwit: {
-        address: nativeSegwit.address,
-        pubkey: nativeSegwit.publicKey,
-        hdPath: "",
-      },
-      nestedSegwit: {
-        address: nestedSegwit.address,
-        pubkey: nestedSegwit.publicKey,
-        hdPath: "",
-      },
-      legacy: {
-        address: legacy.address,
-        pubkey: legacy.publicKey,
-        hdPath: "",
-      },
-      spendStrategy: {
-        addressOrder: ["nativeSegwit", "nestedSegwit", "legacy", "taproot"],
-        utxoSortGreatestToLeast: true,
-        changeAddress: "nativeSegwit",
-      },
-      network: networks.regtest,
-    };
 
     const { accountSpendableTotalUtxos, accountSpendableTotalBalance } =
       await utxo.accountUtxos({
@@ -134,7 +110,7 @@ export function TokenDeployForm() {
       provider,
     });
 
-    await window.oyl.signPsbt({
+    await oyl.signPsbt({
       psbt: psbtHex,
       finalize: true,
       broadcast: true,

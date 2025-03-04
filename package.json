@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@monaco-editor/react": "^4.6.0",
     "@omnisat/lasereyes": "latest",
     "@oyl/sdk": "github:Oyl-Wallet/oyl-sdk",
     "@radix-ui/react-accordion": "^1.2.2",
@@ -62,6 +63,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
+    "wasm-pack": "^0.13.1",
     "zod": "^3.24.1"
   },
   "devDependencies": {

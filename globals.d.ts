@@ -1,3 +1,5 @@
+declare module "wasm-pack";
+
 export interface OylAddresses {
   taproot: Taproot;
   nativeSegwit: NativeSegwit;
