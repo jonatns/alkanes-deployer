@@ -13,7 +13,7 @@ import { getProvider } from "@/lib/provider";
 
 import { Account, alkanes, networks, utxo } from "@oyl/sdk";
 
-const RESERVED_NUMBER = 1;
+const RESERVED_NUMBER = 5;
 
 export function TokenDeployForm() {
   const [formData, setFormData] = useState({
